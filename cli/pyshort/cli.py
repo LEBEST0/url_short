@@ -107,9 +107,9 @@ def stats(
 
 
 # ─────────────────────────────────────────────
-#  pyshort config
+#  pyshort config (commande cachée)
 # ─────────────────────────────────────────────
-@app.command()
+@app.command(hidden=True)
 def config(
     api_url: Optional[str] = typer.Option(None, "--api-url", help="URL de l'API backend."),
     show: bool = typer.Option(False, "--show", help="Affiche la configuration actuelle."),

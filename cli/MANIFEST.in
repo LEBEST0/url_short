@@ -1,0 +1,8 @@
+exclude myenv
+recursive-exclude myenv *
+recursive-exclude .pytest_cache *
+recursive-exclude __pycache__ *
+recursive-exclude *.egg-info *
+recursive-exclude tests *
+recursive-exclude dist *
+recursive-exclude build *

@@ -3,17 +3,9 @@
 ## Installation
 
 ```bash
-pip install pyshort
-# ou en local depuis ce dossier :
-pip install -e .
-```
+pip install pyshort-cli
 
-## Configuration (une seule fois)
-
-```bash
-pyshort config --api-url https://mon-api.render.com
-```
-
+``
 ## Utilisation
 
 ```bash
@@ -31,16 +23,7 @@ pyshort shorten https://example.com --no-copy
 pyshort stats abc12x
 pyshort stats https://shr.ty/abc12x
 
-# Voir la config actuelle
-pyshort config --show
-
 # Version
 pyshort version
 ```
 
-## Lancer les tests
-
-```bash
-pip install pytest
-pytest tests/ -v
-```

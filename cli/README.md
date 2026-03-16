@@ -21,7 +21,7 @@ pyshort shorten https://example.com --no-copy
 
 # Voir les statistiques (code ou URL courte)
 pyshort stats abc12x
-pyshort stats https://shr.ty/abc12x
+pyshort stats https://url-short-1-vaqx.onrender.com/abc12x
 
 # Version
 pyshort version

@@ -1,0 +1,22 @@
+url-shortener/
+├── backend/          ← API FastAPI
+├── cli/              ← Package pip (pyshort)
+└── extension/        ← Extension Chrome/Firefox
+
+
+backend/
+├── main.py            ← point d'entrée FastAPI
+├── database.py        ← connexion SQLite + modèles
+├── models.py          ← schémas Pydantic
+├── shortener.py       ← logique de génération du code court
+├── requirements.txt
+└── .env               ← URL de base (ex: https://shr.ty)
+
+
+cli/
+├── pyshort/
+│   ├── __init__.py
+│   ├── cli.py        ← commandes Typer
+│   └── config.py     ← lecture ~/.pyshortrc
+├── setup.py / pyproject.toml
+└── README.md

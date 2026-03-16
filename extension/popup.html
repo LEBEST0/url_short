@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PyShort</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      width: 320px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #0f172a;
+      color: #e2e8f0;
+    }
+
+    /* ── Header ── */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px;
+      background: #1e293b;
+      border-bottom: 1px solid #334155;
+    }
+    .header-left { display: flex; align-items: center; gap: 8px; }
+    .logo { font-size: 20px; }
+    .title { font-size: 15px; font-weight: 700; color: #38bdf8; }
+    .settings-btn {
+      background: none; border: none; color: #94a3b8;
+      cursor: pointer; font-size: 16px; padding: 4px;
+      border-radius: 4px; transition: color 0.2s;
+    }
+    .settings-btn:hover { color: #e2e8f0; }
+
+    /* ── Tabs ── */
+    .tabs {
+      display: flex;
+      background: #0f172a;
+      border-bottom: 1px solid #1e293b;
+    }
+    .tab {
+      flex: 1; padding: 10px 6px;
+      background: none; border: none;
+      color: #64748b; font-size: 12px; font-weight: 600;
+      cursor: pointer; transition: all 0.2s;
+      border-bottom: 2px solid transparent;
+    }
+    .tab:hover { color: #94a3b8; }
+    .tab.active {
+      color: #38bdf8;
+      border-bottom: 2px solid #38bdf8;
+    }
+
+    /* ── Body ── */
+    .body { padding: 16px; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* Label section */
+    .section-label {
+      font-size: 10px; font-weight: 600; color: #64748b;
+      text-transform: uppercase; letter-spacing: 0.06em;
+      margin-bottom: 6px;
+    }
+
+    /* URL box (page active) */
+    .original-url {
+      font-size: 11px; color: #94a3b8;
+      background: #1e293b; border: 1px solid #334155;
+      border-radius: 6px; padding: 8px 10px;
+      word-break: break-all; line-height: 1.4;
+      max-height: 52px; overflow: hidden;
+      margin-bottom: 12px;
+    }
+
+    /* Champ texte pour URL manuelle */
+    .url-input {
+      width: 100%; padding: 9px 12px;
+      background: #1e293b; border: 1px solid #334155;
+      border-radius: 8px; color: #e2e8f0; font-size: 13px;
+      outline: none; transition: border-color 0.2s;
+      margin-bottom: 10px;
+    }
+    .url-input:focus { border-color: #0ea5e9; }
+    .url-input::placeholder { color: #475569; }
+
+    /* Bouton coller */
+    .btn-paste {
+      width: 100%; padding: 8px;
+      background: #1e293b; border: 1px solid #334155;
+      border-radius: 8px; color: #94a3b8;
+      font-size: 12px; cursor: pointer;
+      transition: all 0.2s; margin-bottom: 10px;
+      display: flex; align-items: center;
+      justify-content: center; gap: 6px;
+    }
+    .btn-paste:hover { border-color: #0ea5e9; color: #38bdf8; }
+
+    /* Bouton principal */
+    .btn-shorten {
+      width: 100%; padding: 10px;
+      background: #0ea5e9; color: white;
+      border: none; border-radius: 8px;
+      font-size: 14px; font-weight: 600;
+      cursor: pointer; transition: background 0.2s, transform 0.1s;
+    }
+    .btn-shorten:hover { background: #38bdf8; }
+    .btn-shorten:active { transform: scale(0.98); }
+    .btn-shorten:disabled { background: #334155; color: #64748b; cursor: not-allowed; }
+
+    /* ── Résultat ── */
+    .result { display: none; margin-top: 14px; }
+    .result.visible { display: block; }
+
+    .result-label {
+      font-size: 11px; color: #64748b; margin-bottom: 6px;
+      text-transform: uppercase; letter-spacing: 0.05em;
+    }
+    .result-row {
+      display: flex; align-items: center; gap: 8px;
+      background: #1e293b; border: 1px solid #0ea5e9;
+      border-radius: 8px; padding: 10px 12px;
+    }
+    .result-url {
+      flex: 1; font-size: 13px; font-weight: 600;
+      color: #38bdf8; word-break: break-all;
+    }
+    .btn-copy {
+      background: #0ea5e9; border: none; color: white;
+      border-radius: 6px; padding: 6px 10px; font-size: 12px;
+      cursor: pointer; white-space: nowrap;
+      transition: background 0.2s; flex-shrink: 0;
+    }
+    .btn-copy:hover { background: #38bdf8; }
+    .btn-copy.copied { background: #22c55e; }
+
+    .stats-row {
+      display: flex; justify-content: space-between;
+      margin-top: 10px; font-size: 11px; color: #64748b;
+    }
+
+    /* ── Spinner ── */
+    .spinner {
+      display: inline-block; width: 14px; height: 14px;
+      border: 2px solid #334155; border-top-color: #38bdf8;
+      border-radius: 50%; animation: spin 0.7s linear infinite;
+      margin-right: 6px; vertical-align: middle;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Erreur ── */
+    .error {
+      display: none; margin-top: 12px;
+      background: #450a0a; border: 1px solid #b91c1c;
+      border-radius: 8px; padding: 10px 12px;
+      font-size: 12px; color: #fca5a5; line-height: 1.5;
+    }
+    .error.visible { display: block; }
+
+    /* ── Footer ── */
+    .footer {
+      padding: 10px 16px; border-top: 1px solid #1e293b;
+      font-size: 10px; color: #334155; text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="header-left">
+      <span class="logo">🔗</span>
+      <span class="title">PyShort</span>
+    </div>
+    <button class="settings-btn" id="btn-settings" title="Paramètres">⚙️</button>
+  </div>
+
+  <!-- Onglets -->
+  <div class="tabs">
+    <button class="tab active" data-tab="current">📄 Page actuelle</button>
+    <button class="tab" data-tab="manual">✏️ Coller une URL</button>
+  </div>
+
+  <div class="body">
+
+    <!-- Onglet 1 : Page actuelle -->
+    <div class="tab-content active" id="tab-current">
+      <div class="section-label">URL de cette page</div>
+      <div class="original-url" id="original-url">Chargement…</div>
+      <button class="btn-shorten" id="btn-shorten-current">Raccourcir cette URL</button>
+      <div class="result" id="result-current">
+        <div class="result-label">URL raccourcie</div>
+        <div class="result-row">
+          <span class="result-url" id="result-url-current"></span>
+          <button class="btn-copy" id="btn-copy-current">Copier</button>
+        </div>
+        <div class="stats-row">
+          <span id="stats-clicks-current"></span>
+          <span id="stats-date-current"></span>
+        </div>
+      </div>
+      <div class="error" id="error-current"></div>
+    </div>
+
+    <!-- Onglet 2 : URL manuelle -->
+    <div class="tab-content" id="tab-manual">
+      <div class="section-label">Collez ou tapez une URL</div>
+      <input
+        class="url-input"
+        id="manual-input"
+        type="text"
+        placeholder="https://exemple.com/lien/long…"
+        spellcheck="false"
+      />
+      <button class="btn-paste" id="btn-paste">
+        <span>📋</span> Coller depuis le presse-papier
+      </button>
+      <button class="btn-shorten" id="btn-shorten-manual">Raccourcir</button>
+      <div class="result" id="result-manual">
+        <div class="result-label">URL raccourcie</div>
+        <div class="result-row">
+          <span class="result-url" id="result-url-manual"></span>
+          <button class="btn-copy" id="btn-copy-manual">Copier</button>
+        </div>
+        <div class="stats-row">
+          <span id="stats-clicks-manual"></span>
+          <span id="stats-date-manual"></span>
+        </div>
+      </div>
+      <div class="error" id="error-manual"></div>
+    </div>
+
+  </div>
+
+  <div class="footer">PyShort v1.0.0</div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

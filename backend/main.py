@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, RedirectResponse
 from fastapi.exceptions import RequestValidationError
 from sqlalchemy.orm import Session
+import os
 
 from config import settings
 from database import get_db, init_db
@@ -13,6 +14,8 @@ app = FastAPI(
     title="URL Shortener API",
     description="Raccourcissez vos URLs via CLI ou extension navigateur.",
     version="1.0.0",
+    docs_url="/docs" if os.getenv("ENV") == "development" else None,
+    redoc_url="/redoc" if os.getenv("ENV") == "development" else None,
 )
 
 @app.exception_handler(RequestValidationError)
